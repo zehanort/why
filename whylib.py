@@ -68,3 +68,18 @@ def close_outfiles(open_files):
 		open_files[i].close()
 
 	return
+
+##########################################################
+# SOME USEFUL FUNCTIONS TO HANDLE GROFF FILES (MANPAGES) #
+##########################################################
+
+# true if the line is a GROFF header (.SH), false otherwise
+# if a header string is specified, return true if the line
+# is a header AND that header is the one specified
+def lineIsHeader(line, *args):
+	if not line:
+		return False
+	elif len(args) == 0:
+		return line.startswith(".SH")
+	else:
+		return line.startswith(".SH %s" % args[0]) or line.startswith(".SH \"%s\"" % args[0])

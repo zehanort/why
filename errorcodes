@@ -2,12 +2,10 @@
 
 ########################################################################
 # THIS PROGRAM WILL TRY TO ISOLATE THE TEXT WE WANT FROM EACH MANPAGE. #
-# FOR NOW, TEXT WILL BE DUMBED IN FILES, BUT LATER THIS PROGRAM WILL   #
+# FOR NOW, TEXT WILL BE DUMBED IN STDOUT, BUT LATER THIS PROGRAM WILL  #
 # MERGE WITH MANSEARCH, AND IT WILL BE RUN AS A SUBBRUTINE FOR EVERY   #
 # HIT (DON'T FORGET THE DB)                                            #
 ########################################################################
-
-# fucking hell
 
 from whylib import *
 from gzip import open as gzopen
@@ -15,7 +13,7 @@ from gzip import open as gzopen
 def print_data(name, f):
 	print "[!] Something interesting found in %s !" % name
 	line = f.readline()
-	while not line.startswith(".SH") and line:
+	while not lineIsHeader(line):
 		print line
 		line = f.readline()
 	print "[!] Done printing sections of %s" % name
@@ -42,7 +40,7 @@ for string in strings:
 				line = manpage.readline()
 
 				while line:
-					if line.startswith(".SH %s" % string) or line.startswith(".SH \"%s\"" % string):
+					if lineIsHeader(line, string):
 						print_data(manpage_name, manpage)
 						break
 					line = manpage.readline()
