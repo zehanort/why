@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+print "***WHY RUNS, BUT IT IS UNDER CONSTRUCTION.***"
+print "EXPECT BREAKDOWN TO APPEAR A FEW LINES DOWN. Why?"
+
+ec = open("/tmp/EC.txt", "r").read()
+errorcode, command = ec.split(" ", 1)
+command = command.strip()
+executable = command.split()[0]
+if executable == "sudo": executable = command.split()[1]
+
+from sqlite3 import *
+
+conn = connect('errorcode.db')
+cur = conn.cursor()
+
+print "[-] Looking for command '%s' (executable '%s') with error %s" %  ( command, executable, errorcode)
+print "[-] (this was the last error)"
+res = cur.execute('''SELECT explanation FROM errorcodes WHERE command = '%s' AND errorcode = '%s' ''' % ( executable, errorcode) )
+
+print ''
+try:
+	print "-> %s" % res.fetchone()[0]
+except TypeError as te:
+	print "[!] Command '%s' with error code '%s' not in database... Why?" % (executable, errorcode)

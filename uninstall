@@ -1,0 +1,47 @@
+BASHRC=$HOME/.bashrc
+TMP=/tmp/tmp.txt
+
+echo "--------------------------------------"
+echo "[-] Welcome to uninstall wizard of why"
+echo "[-] version 1.0 (BETA)"
+echo "--------------------------------------"
+
+### PART 1 ###
+# restore environment
+
+# unset PATH ~/bin
+echo -n "[#] Unsetting environmental parameters... "
+
+grep -Fvx 'export PATH="$PATH:$HOME/.why/bin"' $BASHRC > $TMP
+mv $TMP $BASHRC
+. $BASHRC
+
+echo "Done."
+echo "[-]"
+
+# unset error trap
+echo -n "[#] Removing error trapping... "
+
+grep -Fvxf why.sh $BASHRC > $TMP
+mv $TMP $BASHRC
+. $BASHRC
+
+echo "Done."
+echo "[-]"
+
+### PART 2 ###
+# remove why executable
+echo -n "[#] Uninstalling why... "
+
+rm -rf $HOME/.why
+
+echo "Done."
+echo "[-]"
+
+### PART 3 ###
+
+echo -n "[#] Restoring shell configuration... "
+. $BASHRC
+echo "Done"
+echo "[-]"
+echo "[!] You are strongly advised to restart your terminal session"

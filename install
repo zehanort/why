@@ -1,0 +1,72 @@
+echo "------------------------------------"
+echo "[-] Welcome to install wizard of why"
+echo "[-] version 1.0 (BETA)"
+echo "------------------------------------"
+
+### PART 1 ###
+# set up environment properly
+
+# set PATH ~/bin
+# if it is already set, move on
+grep 'export PATH="$PATH:$HOME/.why/bin"' ~/.bashrc 2>&1 1>/dev/null
+if [ "$?" == 1 ]; then
+	echo -n "[#] Setting environmental parameters... ";
+	echo "" >> ~/.bashrc;
+	echo 'export PATH="$PATH:$HOME/.why/bin"' >> ~/.bashrc;
+	source ~/.bashrc;
+	echo "Done";
+else
+	echo "[!] Environmental parameters already set. Why?";
+	echo "[!] No worries. Moving on...";
+fi
+echo "[-]";
+
+# set error trap for whenever terminal session starts
+# if it already exists, move on
+grep "trap error_log ERR" ~/.bashrc 2>&1 1>/dev/null
+
+if [ "$?" == 1 ]; then
+	echo -n "[#] Setting error traping... ";
+	echo "" >> ~/.bashrc;
+	cat why.sh >> ~/.bashrc;
+	source ~/.bashrc;
+	echo "Done";
+else
+	echo "[!] Error trapping already exists in ~/.bashrc.";
+	echo "[!] Have you installed why in the past? Why?";
+	echo "[!] No worries. Moving on...";
+fi
+echo "[-]";
+
+### PART 2 ###
+# set up why executable in ~/bin
+
+# check if ~/bin/ exists. If not, create it
+if [ ! -d ~/.why/bin ]; then
+	echo -n "[#] Creating directories... ";
+	if [ ! -d ~/.why ]; then
+		mkdir ~/.why;
+	fi
+	mkdir ~/.why/bin;
+	echo "Done";
+else
+	echo "[!] Directories already in place. Why?";
+	echo "[!] No worries. Moving on...";
+fi
+echo "[-]"
+
+# check if ~/bin/why already exists
+if [ -f ~/.why/bin/why ]; then
+	echo "[!] why already installed. Why?";
+	echo "[!] No worries. Moving on...";
+# install why in ~/bin
+else
+	echo -n "[#] Installing why in ~/.why/bin... ";
+	cp why ~/.why/bin/why;
+	chmod +x ~/.why/bin/why;
+	echo "Done";
+fi
+echo "[-]"
+echo "[!] You are strongly advised to restart your terminal session"
+
+### PART 3 ###
