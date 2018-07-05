@@ -78,7 +78,7 @@ def close_outfiles(open_files):
 # is a header AND that header is the one specified
 def lineIsHeader(line, *args):
 	if not line:
-		return False
+		return True 		# semantically dirty ( ? ), but works
 	elif len(args) == 0:
 		return line.startswith(".SH")
 	else:
