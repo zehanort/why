@@ -19,22 +19,7 @@ x = [[] for i in xrange(len(mandirs))]
 all_progs = dict(zip(mandirs, x))
 
 for mandir in mandirs:
-	# print "[!] Discarding all irelevant files in directory : %s" % mandir
-	# print "[!] This may take a while..."
-
-	progs = all_progs[mandir]
-
-	for filename in listdir(mandir):
-
-		# we are interested in man pages (gzipped) only
-
-		# filetype = run(['file', mandir+filename])
-		# if "gzip compressed data" not in filetype:
-		# 	continue
-
-		progs.append(filename)
-
-	print "[!] Done."
+	all_progs[mandir] = listdir(mandir)
 
 # we now need to create 2 dictionaries, based on the strings we are
 # looking for inside the manpages
