@@ -10,18 +10,31 @@
 from whylib import *
 from gzip import open as gzopen
 
+logdir = "logs/"
+
+counter = 0
+
 def print_data(name, f):
+	logname = logdir + name.split('/')[-1] + ".mylogs"
 	print "[!] Something interesting found in %s !" % name
+	print "[!] Going to log it to %s ..." % logname
 	line = f.readline()
+	log = open(logname, 'w')
 	while not lineIsHeader(line):
-		print line
+		log.write(line)
 		line = f.readline()
-	print "[!] Done printing sections of %s" % name
+	print "[-] Done printing sections of %s" % name
 	return
 
 # for every string in strings (file in oufiles_names)
 # unzip it again and check for .SH <string>
 # as a first test, print all text (nicely) before next .SH
+
+# we need to log false positives (manpages where one of the keywords was found
+# but the check we perform here fails), in order to inspect them later
+# in order to be a little wiser ( ? )
+problematics = logdir + "problematics.mylogs"
+problog = open(problematics, 'w')
 
 for string in strings:
 
@@ -39,15 +52,26 @@ for string in strings:
 				print "[!] Currently checking manpage %s" % manpage_name
 				line = manpage.readline()
 
+				falsePositive = True
 				while line:
 					if lineIsHeader(line, string):
 						print_data(manpage_name, manpage)
+						falsePositive = False
 						break
 					line = manpage.readline()
 
-			print "[!] Done checking manpage %s" % manpage_name
+			if falsePositive:
+				print "[!] False positive found! Logging it..."
+				problog.write("string: %s)\t" + manpage_name + '\n')
+				counter += 1
+			print "[-] Done checking manpage %s" % manpage_name
 			print "-------------------------------------------------------------------"
 
 			manpage_name = ''.join(listfile.readline()[1:-1].split(') '))
 
-	print "[!] Done with file : %s" % outfiles_names[string]
+	print "[-] Done with file : %s" % outfiles_names[string]
+
+problog.close()
+
+print "[-] Done."
+print "[-] Found %d false positives and logged them in %s" % (counter, problematics)
