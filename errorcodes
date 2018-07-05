@@ -64,7 +64,7 @@ for string in strings:
 
 			if falsePositive:
 				print "[!] False positive found! Logging it..."
-				problog.write("string: %s) " % string + manpage_name + '\n')
+				problog.write("(string: %s) " % string + manpage_name + '\n')
 				counter += 1
 			print "[-] Done checking manpage %s" % manpage_name
 			print "-------------------------------------------------------------------"
