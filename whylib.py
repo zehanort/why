@@ -5,7 +5,7 @@ from os import listdir
 # NOTE: The strings list below can be modified to one's liking #
 ################################################################
 
-strings = ["ERROR", "EXIT STATUS", "DIAGNOSTICS"]
+strings = ["ERROR", "ERRORS", "EXIT STATUS", "RETURN VALUE", "RETURN VALUES", "DIAGNOSTICS"]
 
 mandirs_ = run(['manpath'])[:-1].split(':')
 mandirs = [(m + '/man1/') for m in mandirs_ if (run(['file', m]).split(':')[1][1:-1] == "directory")]
