@@ -4,7 +4,7 @@
 # print the programs that are in error.txt and not in any other #
 #################################################################
 
-from variables import strings, counters, outfiles_names, open_outfiles, close_outfiles
+from whylib import strings, counters, outfiles_names, open_outfiles, close_outfiles
 
 outfiles = open_outfiles(outfiles_names, 'r')
 

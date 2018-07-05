@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from gzip import open
-from variables import *
+from whylib import *
 
 # (open_outfiles returns a dict)
 outfiles = open_outfiles(outfiles_names, 'w')

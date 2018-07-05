@@ -7,7 +7,7 @@
 # HIT (DON'T FORGET THE DB)                                            #
 ########################################################################
 
-from variables import *
+from whylib import *
 from gzip import open as gzopen
 
 def print_data(name, f):
