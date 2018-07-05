@@ -19,8 +19,8 @@ x = [[] for i in xrange(len(mandirs))]
 all_progs = dict(zip(mandirs, x))
 
 for mandir in mandirs:
-	print "[!] Discarding all irelevant files in directory : %s" % mandir
-	print "[!] This may take a while..."
+	# print "[!] Discarding all irelevant files in directory : %s" % mandir
+	# print "[!] This may take a while..."
 
 	progs = all_progs[mandir]
 
@@ -28,9 +28,9 @@ for mandir in mandirs:
 
 		# we are interested in man pages (gzipped) only
 
-		filetype = run(['file', mandir+filename])
-		if "gzip compressed data" not in filetype:
-			continue
+		# filetype = run(['file', mandir+filename])
+		# if "gzip compressed data" not in filetype:
+		# 	continue
 
 		progs.append(filename)
 

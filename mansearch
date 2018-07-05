@@ -22,16 +22,19 @@ for mandir in mandirs:
 
 		print "[-] Now processing manpage file (%d/%d) from %s : %s ..." % (i, n, mandir, program)
 
-		with open(mandir + program, "r") as manpage:
-			manfile = manpage.readlines()
-			for string in strings:
-				for line in manfile:
-					if lineIsHeader(line, string):
-						print "[!] String \"%s\" found in manpage file : %s" % (string, program)
-						print "[!] The name of the manpage file will be logged in file : %s" % outfiles_names[string]
-						data_to_write = "(" + mandir + ") " + program + '\n'
-						outfiles[string].write(data_to_write)
-						counters[string] += 1
+		try:
+			with open(mandir + program, "r") as manpage:
+				manfile = manpage.readlines()
+				for string in strings:
+					for line in manfile:
+						if lineIsHeader(line, string):
+							print "[!] String \"%s\" found in manpage file : %s" % (string, program)
+							print "[!] The name of the manpage file will be logged in file : %s" % outfiles_names[string]
+							data_to_write = "(" + mandir + ") " + program + '\n'
+							outfiles[string].write(data_to_write)
+							counters[string] += 1
+		except Exception as e:
+			print "[-] Couldn't process file :", program, ":", str(e)
 
 		i += 1
 
