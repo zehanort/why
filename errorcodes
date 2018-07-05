@@ -19,10 +19,12 @@ def print_data(name, f):
 	print "[!] Something interesting found in %s !" % name
 	print "[!] Going to log it to %s ..." % logname
 	line = f.readline()
-	log = open(logname, 'w')
-	while not lineIsHeader(line):
-		log.write(line)
-		line = f.readline()
+
+	with open(logname, 'w') as log:
+		while not lineIsHeader(line):
+			log.write(line)
+			line = f.readline()
+
 	print "[-] Done printing sections of %s" % name
 	return
 
@@ -62,7 +64,7 @@ for string in strings:
 
 			if falsePositive:
 				print "[!] False positive found! Logging it..."
-				problog.write("string: %s)\t" + manpage_name + '\n')
+				problog.write("string: %s) " % string + manpage_name + '\n')
 				counter += 1
 			print "[-] Done checking manpage %s" % manpage_name
 			print "-------------------------------------------------------------------"

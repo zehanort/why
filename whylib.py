@@ -80,6 +80,6 @@ def lineIsHeader(line, *args):
 	if not line:
 		return True 		# semantically dirty ( ? ), but works
 	elif len(args) == 0:
-		return line.startswith(".SH")
+		return line.startswith(".SH") or line.startswith(".Sh")
 	else:
-		return line.startswith(".SH %s" % args[0]) or line.startswith(".SH \"%s\"" % args[0])
+		return line.startswith(".SH %s" % args[0]) or line.startswith(".SH \"%s\"" % args[0]) or line.startswith(".Sh %s" % args[0]) or line.startswith(".Sh \"%s\"" % args[0])
