@@ -65,7 +65,10 @@ def close_outfiles(open_files):
 def lineIsHeader(line, *args):
 	if not line:
 		return True 		# semantically dirty ( ? ), but works
-	elif len(args) == 0:
-		return line.startswith(".SH") or line.startswith(".Sh")
 	else:
-		return (line == ".SH %s\n" % args[0]) or (line == ".SH \"%s\"\n" % args[0]) or (line == ".Sh %s\n" % args[0]) or (line == ".Sh \"%s\"\n" % args[0])
+		if not line.startswith(".S"):
+			return False
+		if len(args) == 0:
+			return True	
+		return line.translate(None, "\"\n\t:").upper() == "%s %s" % (line[:3].upper(), args[0])
+		# return (line == "%s %s\n" % (line[:3], args[0])) or (line == "%s \"%s\"\n" % (line[:3], args[0]))
