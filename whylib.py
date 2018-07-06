@@ -63,12 +63,8 @@ def close_outfiles(open_files):
 # if a header string is specified, return true if the line
 # is a header AND that header is the one specified
 def lineIsHeader(line, *args):
-	if not line:
-		return True 		# semantically dirty ( ? ), but works
-	else:
-		if not line.startswith(".S"):
-			return False
-		if len(args) == 0:
-			return True	
-		return line.translate(None, "\"\n\t:").upper() == "%s %s" % (line[:3].upper(), args[0])
-		# return (line == "%s %s\n" % (line[:3], args[0])) or (line == "%s \"%s\"\n" % (line[:3], args[0]))
+	if not line.startswith(".S"):
+		return False
+	if len(args) == 0:
+		return True	
+	return line.translate(None, "\"\n\t:").upper() == "%s %s" % (line[:3].upper(), args[0])

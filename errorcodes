@@ -21,7 +21,7 @@ def print_data(name, f):
 	line = f.readline()
 
 	with open(logname, 'w') as log:
-		while not lineIsHeader(line):
+		while line and not lineIsHeader(line):
 			log.write(line)
 			line = f.readline()
 
