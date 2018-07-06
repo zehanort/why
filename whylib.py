@@ -1,5 +1,6 @@
 from subprocess import check_output as run
 from os import listdir
+from os.path import isdir
 
 ################################################################
 # NOTE: The strings list below can be modified to one's liking #
@@ -8,7 +9,7 @@ from os import listdir
 strings = ["ERROR", "ERRORS", "EXIT STATUS", "RETURN VALUE", "RETURN VALUES", "DIAGNOSTICS"]
 
 mandirs_ = run(['manpath'])[:-1].split(':')
-mandirs = [(m + '/man1/') for m in mandirs_ if (run(['file', m]).split(':')[1][1:-1] == "directory")]
+mandirs = [(m + '/man1/') for m in mandirs_ if isdir(m + '/man1')]
 
 ############################
 # some useful dictionaries #
