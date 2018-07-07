@@ -4,8 +4,8 @@ from sys import argv, exit
 from subprocess import check_output
 from gzip import open
 
-if len(argv) != 2:
-	print "usage: ./readman <executable> (e.g. ./readman ls)"
+if len(argv) not in [2, 3]:
+	print "usage: ./readman <executable> [CHOICE] (e.g. ./readman ls 1)"
 	exit(1)
 
 mans = check_output(['whereis', '-m', argv[1]])[:-1].split(' ')[1:]
@@ -14,12 +14,19 @@ print "Select manual page of \"%s\" to display how python reads it:" % argv[1]
 for i in xrange(len(mans)):
 	print "Press %d for %s" % (i + 1, mans[i])
 
-choice = int(raw_input(">> ")) - 1
+if len(argv) == 3:
+	choice = int(argv[2]) -1
+else:
+	choice = int(raw_input(">> ")) - 1
 
 if choice not in range(len(mans)):
 	print "Failed to select a valid option."
 	print "Abort."
 	exit(1)
+
+print "---------------------------------------------------------"
+print "-------------------- MANPAGE FOLLOWS --------------------"
+print "---------------------------------------------------------"
 
 with open(mans[choice], 'r') as f:
 	lines = f.readlines()
