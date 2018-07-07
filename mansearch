@@ -22,6 +22,15 @@ unpr_cnt = 0
 # truncate unprocessed_log
 open(unprocessed_log, 'w').close()
 
+# we need to consult checked file for checked manpages
+# so as not to log them as unprocessed later
+
+with open('logs/checked', 'r') as f:
+	checked = f.readlines()
+
+checked = [line[:-1] for line in checked]
+checked_cnt = len(checked)
+
 # (open_outfiles returns a dict)
 outfiles = open_outfiles(outfiles_names, 'w')
 unpr = open(unprocessed_log, 'w')
@@ -59,9 +68,9 @@ for mandir in mandirs:
 							processed = True
 							break
 
-			if not processed:
+			if not processed and (mandir + program) not in checked:
 				unpr_cnt += 1
-				data_to_write = str(unpr_cnt) + ": " + mandir + program + '\n'
+				data_to_write = mandir + program + '\n'
 				unpr.write(data_to_write)
 			else:
 				counter += 1
