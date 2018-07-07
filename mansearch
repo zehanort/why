@@ -3,6 +3,8 @@
 from gzip import open
 from whylib import *
 
+counter = 0
+
 # (open_outfiles returns a dict)
 outfiles = open_outfiles(outfiles_names, 'w')
 
@@ -33,6 +35,7 @@ for mandir in mandirs:
 							data_to_write = "(" + mandir + ") " + program + '\n'
 							outfiles[string].write(data_to_write)
 							counters[string] += 1
+							counter += 1
 		except Exception as e:
 			print "[-] Couldn't process file :", program, ":", str(e)
 
@@ -42,9 +45,13 @@ for mandir in mandirs:
 
 close_outfiles(outfiles)
 
+success_rate = (100.0 * counter) / all_progs_counter
+
 # finally
 print "[!] Done for all manual directories."
 print "[!] --------------------------------"
 print "[!] Statistics:"
 for string in counters:
 	print "[!] \"%s\" found %d times." % (string, counters[string])
+print "[!] SUMMARY: Managed to extract information from",
+print "%d out of %d manpages (%0.2f%%)" % (counter, all_progs_counter, success_rate)
