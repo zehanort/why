@@ -1,17 +1,32 @@
 #!/usr/bin/env python
 
-from gzip import open
+from sys import argv
+from gzip import open as gzopen
 from whylib import *
 
+if len(argv) == 1:
+	verbose = False
+else:
+	verbose = argv[1] == '-v'
+
+# counter of hits in manpages (there may be more than 1 hit per manpage)
+hits = 0
+# counter of manpages with hit(s)
 counter = 0
+all_progs_counter = 0
+
+# log of manpages we failed to processed
+# need to make this list as short as possible
+unprocessed_log = "logs/unprocessed"
+unpr_cnt = 0
+# truncate unprocessed_log
+open(unprocessed_log, 'w').close()
 
 # (open_outfiles returns a dict)
 outfiles = open_outfiles(outfiles_names, 'w')
+unpr = open(unprocessed_log, 'w')
 
 for mandir in mandirs:
-
-	# right now, programs list holds all the programs that
-	# their manpages live in man 1 section (sorted per manpath)
 
 	# iterate over every program with a manpage in
 	# current mandir and search for the strings
@@ -22,36 +37,63 @@ for mandir in mandirs:
 
 	for program in programs:
 
-		print "[-] Now processing manpage file (%d/%d) from %s : %s ..." % (i, n, mandir, program)
+		if verbose:
+			print "[-] Now processing manpage file (%d/%d) from %s : %s ..." % (i, n, mandir, program)
+
+		processed = False
 
 		try:
-			with open(mandir + program, "r") as manpage:
+			with gzopen(mandir + program, 'r') as manpage:
 				manfile = manpage.readlines()
+				all_progs_counter += 1			# because the file opened properly and readlines() was successful
 				for string in strings:
 					for line in manfile:
 						if lineIsHeader(line, string):
 							print "[!] String \"%s\" found in manpage file : %s" % (string, program)
-							print "[!] The name of the manpage file will be logged in file : %s" % outfiles_names[string]
+							if verbose:
+								print "[!] The name of the manpage file will be logged in file : %s" % outfiles_names[string]
 							data_to_write = "(" + mandir + ") " + program + '\n'
 							outfiles[string].write(data_to_write)
 							counters[string] += 1
-							counter += 1
+							hits += 1
+							processed = True
+							break
+
+			if not processed:
+				unpr_cnt += 1
+				data_to_write = str(unpr_cnt) + ": " + mandir + program + '\n'
+				unpr.write(data_to_write)
+			else:
+				counter += 1
+
 		except Exception as e:
-			print "[-] Couldn't process file :", program, ":", str(e)
+			if verbose:
+				print "[-] Couldn't process file", mandir + program, ":", str(e)
 
 		i += 1
 
-	print "[!] Done."
-
 close_outfiles(outfiles)
+unpr.close()
 
-success_rate = (100.0 * counter) / all_progs_counter
+succ_rate = (100.0 * counter) / all_progs_counter
+unpr_rate = (100.0 * unpr_cnt) / all_progs_counter
 
 # finally
-print "[!] Done for all manual directories."
+print "[!] Done for all manpage directories."
 print "[!] --------------------------------"
 print "[!] Statistics:"
 for string in counters:
 	print "[!] \"%s\" found %d times." % (string, counters[string])
-print "[!] SUMMARY: Managed to extract information from",
-print "%d out of %d manpages (%0.2f%%)" % (counter, all_progs_counter, success_rate)
+print "[!] --------------------------------"
+print "[!] ----------- SUMMARY ------------"
+print "[!] --------------------------------"
+print "[!] %d hits out of %d manpages" % (hits, all_progs_counter)
+print "[!] Managed to extract information from",
+print "%d out of %d manpages (%0.2f%%)" % (counter, all_progs_counter, succ_rate)
+print "[!] Could not process %d out of %d manpages (%0.2f%%)" % (unpr_cnt, all_progs_counter, unpr_rate)
+
+# a redundant sanity check
+if counter + unpr_cnt == all_progs_counter and hits >= counter:
+	print "(Sanity check OK)"
+else:
+	print "(Sanity check NOT OK)"

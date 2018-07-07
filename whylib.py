@@ -18,11 +18,9 @@ mandirs = [(m + '/man1/') for m in mandirs_ if isdir(m + '/man1')]
 # a dictionary to hold all manpages (as all_progs) per manpath
 x = [[] for i in xrange(len(mandirs))]
 all_progs = dict(zip(mandirs, x))
-all_progs_counter = 0
 
 for mandir in mandirs:
 	all_progs[mandir] = listdir(mandir)
-	all_progs_counter += len(all_progs[mandir])
 
 # we now need to create 2 dictionaries, based on the strings we are
 # looking for inside the manpages
