@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+#######################################
+# TRIM IMPORTANT SECTIONS OF MANPAGES #
+# AND MAKE THEM KINDA READABLE        #
+#######################################
+
+from sys import argv
+from os import listdir
+from re import sub
+
+logdir = 'logs/'
+
+logs_ = listdir(logdir)
+logs = [log for log in logs_ if 'mylogs' in log]
+
+for log in logs:
+
+	with open(logdir + log, 'r') as f:
+		intext = f.readlines()
+
+	with open(logdir + log + '.clean', 'w') as cleanlog:
+		for line in intext:
+			# better use a translation table?
+			line_to_log = sub(r'\.[A-Za-z]+ ?', '', line).translate(None, '\\').replace('\"00\"', '0')
+			if line_to_log in '\n':		# that is an empty line or a '\n' line
+				continue
+			else:
+				cleanlog.write(line_to_log)
